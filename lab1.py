@@ -6,7 +6,7 @@ remove_numbers = re.sub("\d+", '', text1)
 print(remove_numbers)
 
 text2 = "<div><h2>Header</h2> <p>article<b>strong text</b> <a href="">link</a> </p></div>"
-remove_html = re.sub("[^>]", "", text2)
+remove_html = re.sub("[<(\\)?>]", "", text2)
 print(remove_html)
 
 text3 = """Lorem ipsum dolor sit amet, consectetur; adipiscing elit.
