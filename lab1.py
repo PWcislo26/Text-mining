@@ -1,9 +1,8 @@
 import re
 
 # zad 1
-text1 = "Dzisiaj mamy 4 stopnie na plusie, 1 marca 2022 roku"
-
-remove_numbers = re.sub("[0-9]+", "", text1)
+text1 = "Dzisiaj mamy 4 stopnie na plusie,  marca 2022 roku"
+remove_numbers = re.sub("\d+", '', text1)
 print(remove_numbers)
 
 text2 = "<div><h2>Header</h2> <p>article<b>strong text</b> <a href="">link</a> </p></div>"
