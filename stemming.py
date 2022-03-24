@@ -4,23 +4,20 @@ from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 from nltk.tokenize import word_tokenize, sent_tokenize
 
-eee = """In Guam, she lAIDd in the sun 323321 and ate mangoes all day.
+example = """In Guam, she lAIDd in the sun 323321 and ate mangoes all day.
 She got hiccups and couldn't get rid 22of them for three hours.
 Let's all just takE a mOMent to breathe, please!"""
 
 
 def text_cleanup(text: str) -> str:
-    tmp = ""
-    for char in text:
-        if char.isalpha():
-            tmp += char.lower()
-        else:
-            tmp += char
-    remove_numbers = re.sub("[0-9]+", "", tmp)
-    remove_punctuation = re.sub(r"[^\w\s]", '', remove_numbers)
-    remove_whitespaces = re.sub(r"^\s+|\s+$", '', remove_punctuation)
+    temp = re.sub(r"[:|;][-]?[\)|\(|<|>]", "", text)  # remove emotes
+    temp = temp.lower()  # lower text
+    temp = re.sub("\d", "", temp)  # remove digits
+    temp = re.sub("http(s?)([^ ]*)", "", temp)  # remove links
+    temp = re.sub(r"[^\w\s]", '', temp)  # remove punctuation marks
+    temp = temp.strip()
 
-    return remove_whitespaces
+    return temp
 
 
 def stemming(text: str) -> list:
@@ -37,4 +34,4 @@ def stemming(text: str) -> list:
     return stemming_output
 
 
-print(stemming(text_cleanup(eee)))
+print(stemming(text_cleanup(example)))
