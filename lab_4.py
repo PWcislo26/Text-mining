@@ -1,9 +1,10 @@
-import nltk
 import re
+import sklearn
 
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
-from nltk.tokenize import word_tokenize, sent_tokenize
+from nltk.tokenize import word_tokenize
+from sklearn.feature_extraction.text import CountVectorizer
 
 
 def text_cleanup(text: str) -> str:
@@ -36,4 +37,9 @@ She got hiccups and couldn't get rid 22of them for three hours.
 Let's all just takE a mOMent to breathe, please!"""
 
 print(text_tokenizer(example))
+
+# to do
+vectorizer = CountVectorizer(tokenizer=text_tokenizer)
+x_transform = vectorizer.fit_transform()
+print(x_transform)
 
