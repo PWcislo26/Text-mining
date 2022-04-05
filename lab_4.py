@@ -1,45 +1,33 @@
 import re
-import sklearn
-
+from nltk import PorterStemmer
 from nltk.corpus import stopwords
-from nltk.stem import PorterStemmer
 from nltk.tokenize import word_tokenize
-from sklearn.feature_extraction.text import CountVectorizer
 
 
-def text_cleanup(text: str) -> str:
-    temp = re.sub(r"[:|;][-]?[\)|\(|<|>]", "", text)  # remove emotes
-    temp = temp.lower()  # lower text
-    temp = re.sub(r"\d", "", temp)  # remove digits
-    temp = re.sub(r"http(s?)([^ ]*)", "", temp)  # remove links
-    temp = re.sub(r"[^\w\s]", '', temp)  # remove punctuation marks
-    temp = temp.strip()
+def cleanup_text(text: str) -> str:
+    emoticons = re.findall(r'[:|;][-]?[)|(|<>]', text)
+    text_low = text.lower()
+    text_without_number = re.sub(r'\d', '', text_low)
+    text_without_html = re.sub(r'<.*?>', '', text_without_number)
+    text_without_punc_marks = re.sub(r'\W(?<!\s)', '', text_without_html)
+    text_without_white_space = text_without_punc_marks.strip()
+    text_done = text_without_white_space + ' '.join(emoticons)
+    return text_done
 
-    return temp
+
+def delete_stop_words(text: str) -> list:
+    stop_words = stopwords.words("english")
+    return [w for w in text if not w.lower() in stop_words]
 
 
-def text_tokenizer(text: str) -> list:
-    text = text_cleanup(text)
+def stemming(word: str) -> str:
     ps = PorterStemmer()
-    stemming_output = []
-    stop_list = set(stopwords.words("english"))
-    words = word_tokenize(text)
-    non_stopwords = [word for word in words if word not in stop_list]
-    for word in non_stopwords:
-        if len(word) > 3:
-            stemming_output.append(ps.stem(word))
-
-    return stemming_output
+    return ps.stem(word)
 
 
-example = """In Guam, she lAIDd in the sun 323321 and ate mangoes all day.
-She got hiccups and couldn't get rid 22of them for three hours.
-Let's all just takE a mOMent to breathe, please!"""
+def text_tokenizer(text: str):
+    clened = cleanup_text(text)
+    tokens = word_tokenize(clened)
+    without_stopwords = delete_stop_words(tokens)
 
-print(text_tokenizer(example))
-
-# to do
-vectorizer = CountVectorizer(tokenizer=text_tokenizer)
-x_transform = vectorizer.fit_transform()
-print(x_transform)
-
+    return [stemming(w) for w in without_stopwords if len(w) > 3]
