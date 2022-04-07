@@ -26,8 +26,8 @@ def stemming(word: str) -> str:
 
 
 def text_tokenizer(text: str):
-    clened = cleanup_text(text)
-    tokens = word_tokenize(clened)
+    clenead = cleanup_text(text)
+    tokens = word_tokenize(clenead)
     without_stopwords = delete_stop_words(tokens)
 
     return [stemming(w) for w in without_stopwords if len(w) > 3]
