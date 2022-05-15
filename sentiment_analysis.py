@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from util import text_tokenizer
+from util import text_tokenizer, addlabels
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
@@ -23,34 +23,37 @@ def generate_dataframe() -> pd.DataFrame:
 
 def show_plots(df: pd.DataFrame):
     """Generate plots related to dataframe"""
-    ratings = df['rating'].value_counts()  # count distribution of review ratings
+    ratings = df['rating'].value_counts().sort_index()  # count distribution of review ratings
     plt.bar(ratings.index, ratings.values)
-    plt.title("Distribution of review ratings")
+    plt.title(f"Distribution of review ratings")
     plt.xlabel("Review rating")
-    plt.ylabel("Amount of reviews")
+    plt.ylabel("Number of reviews")
+    addlabels(ratings.index, ratings.values)
+    plt.show()
+    print(ratings)
+
+    sentiments = df['sentiment'].value_counts()
+    plt.pie(sentiments.values, shadow=True, labels=["Positive", "Negative"], startangle=90, autopct='%1.1f%%',
+            colors=["Green", "Red"])
+    plt.title("Distribution of negative and positive sentiment reviews")
+    for i in range(len(ratings.index)):
+        plt.text(i, ratings.values[i],ratings.values[i], ha="center", va="bottom")
     plt.show()
 
 
 def sentiment(df: pd.DataFrame):
     """Sentiment analysis for the dataframe"""
-    x = df['verified_reviews']
+    X = df['verified_reviews']
     y = df['sentiment']
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.1)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
     vectorizer = CountVectorizer(tokenizer=text_tokenizer)
-    ctmTr = vectorizer.fit_transform(x_train)
-    x_test_dtm = vectorizer.transform(x_test)
+    x_transform_train = vectorizer.fit_transform(X_train)
+    x_transform_test = vectorizer.transform(X_test)
     lr = LogisticRegression()
-    lr.fit(ctmTr, y_train)
-    lr_score = lr.score(x_test_dtm, y_test)
-    print(lr_score)
-    y_pred_lr = lr.predict(x_test_dtm)
-    cm_lr = confusion_matrix(y_test, y_pred_lr)
-    tn, fp, fn, tp = confusion_matrix(y_test, y_pred_lr).ravel()
-    print(tn, fp, fn, tp)
-
-    tpr_lr = round(tp / (tp + fn), 4)
-    tnr_lr = round(tn / (tn + fp), 4)
-    print(tpr_lr, tnr_lr)
+    lr.fit(x_transform_train, y_train)
+    lr_score = lr.score(x_transform_test, y_test)
+    print(f"Logistic regression prediction accuracy - {round(lr_score,3) * 100} %")
+    y_pred_lr = lr.predict(x_transform_train)
 
 
 # text_pos = " ".join(review for review in df.verified_reviews.astype(str))
