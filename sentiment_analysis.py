@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from util import text_tokenizer, addlabels
+from util import text_tokenizer, addlabels, cleanup_text
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
@@ -13,7 +13,8 @@ from nltk.corpus import stopwords
 
 def generate_dataframe() -> pd.DataFrame:
     """Generate a dataframe from a csv file for further use"""
-    df = pd.read_csv('amazon_alexa_reviews.csv', sep=';', usecols=['rating', 'verified_reviews'], encoding='cp1252')
+    df = pd.read_csv('data/amazon_alexa_reviews.csv', sep=';',
+                     usecols=['rating', 'verified_reviews'], encoding='cp1252')
     df['verified_reviews'].replace(' ', np.NaN, inplace=True)  # replace empty reviews with NaN
     df.dropna(how='any', inplace=True)  # delete reviews that are Nan
     df["sentiment"] = df.rating.apply(
@@ -32,13 +33,22 @@ def show_plots(df: pd.DataFrame):
     plt.show()
     print(ratings)
 
-    sentiments = df['sentiment'].value_counts()
+    sentiments = df['sentiment'].value_counts()  # count distribution of positive and negative sentiment among reviews
     plt.pie(sentiments.values, shadow=True, labels=["Positive", "Negative"], startangle=90, autopct='%1.1f%%',
             colors=["Green", "Red"])
-    plt.title("Distribution of negative and positive sentiment reviews")
+    plt.title("Distribution of positive and negative sentiment reviews")
     for i in range(len(ratings.index)):
         plt.text(i, ratings.values[i],ratings.values[i], ha="center", va="bottom")
     plt.show()
+
+
+def show_wordclouds(df: pd.DataFrame):
+    text = " ".join(review for review in df.verified_reviews.astype(str))
+    text = cleanup_text(text)
+    stop_list = set(stopwords.words('english'))
+    wc = WordCloud(width=2500, height=2500, stopwords=stop_list, background_color='black', colormap='Paired')
+    wc.generate(text)
+    wc.to_file('wordclouds/wc_general.png')
 
 
 def sentiment(df: pd.DataFrame):
@@ -65,6 +75,7 @@ def sentiment(df: pd.DataFrame):
 def main():
     df = generate_dataframe()
     show_plots(df)
+    show_wordclouds(df)
     sentiment(df)
 
 
