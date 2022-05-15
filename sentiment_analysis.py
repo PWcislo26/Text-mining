@@ -2,11 +2,10 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from util import text_tokenizer, addlabels, cleanup_text
+from util import text_tokenizer, add_labels, cleanup_text
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import confusion_matrix
 from wordcloud import WordCloud
 from nltk.corpus import stopwords
 
@@ -27,9 +26,9 @@ def show_plots(df: pd.DataFrame):
     ratings = df['rating'].value_counts().sort_index()  # count distribution of review ratings
     plt.bar(ratings.index, ratings.values)
     plt.title(f"Distribution of review ratings")
-    plt.xlabel("Review rating")
+    plt.xlabel("Review rating score")
     plt.ylabel("Number of reviews")
-    addlabels(ratings.index, ratings.values)
+    add_labels(ratings.index, ratings.values)
     plt.show()
     print(ratings)
 
@@ -37,8 +36,6 @@ def show_plots(df: pd.DataFrame):
     plt.pie(sentiments.values, shadow=True, labels=["Positive", "Negative"], startangle=90, autopct='%1.1f%%',
             colors=["Green", "Red"])
     plt.title("Distribution of positive and negative sentiment reviews")
-    for i in range(len(ratings.index)):
-        plt.text(i, ratings.values[i],ratings.values[i], ha="center", va="bottom")
     plt.show()
 
 

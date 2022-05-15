@@ -37,7 +37,7 @@ def text_tokenizer(text: str) -> list:
     return [stemming(w) for w in without_stopwords if len(w) > 3]
 
 
-def addlabels(x, y):
+def add_labels(x, y):
     """adding labels to bar chart """
     for i in range(1,len(x)+1):
         plt.text(i,y[i-1],y[i-1], ha="center", va="bottom")
