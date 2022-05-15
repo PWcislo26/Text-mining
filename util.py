@@ -25,7 +25,7 @@ def stemming(word: str) -> str:
     return ps.stem(word)
 
 
-def text_tokenizer(text: str):
+def text_tokenizer(text: str) -> list:
     cleaned = cleanup_text(text)
     tokens = word_tokenize(cleaned)
     without_stopwords = delete_stop_words(tokens)
