@@ -1,10 +1,13 @@
 import re
+import matplotlib.pyplot as plt
+
 from nltk import PorterStemmer
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 
 
 def cleanup_text(text: str) -> str:
+    """cleaning input text"""
     emoticons = re.findall(r'[:|;][-]?[)|(|<>]', text)
     text_low = text.lower()
     text_without_number = re.sub(r'\d', '', text_low)
@@ -16,6 +19,7 @@ def cleanup_text(text: str) -> str:
 
 
 def delete_stop_words(text: str) -> list:
+    """deleting stop words from input text"""
     stop_words = stopwords.words("english")
     return [w for w in text if not w.lower() in stop_words]
 
@@ -31,3 +35,9 @@ def text_tokenizer(text: str) -> list:
     without_stopwords = delete_stop_words(tokens)
 
     return [stemming(w) for w in without_stopwords if len(w) > 3]
+
+
+def addlabels(x, y):
+    """adding labels to bar chart """
+    for i in range(1,len(x)+1):
+        plt.text(i,y[i-1],y[i-1], ha="center", va="bottom")
