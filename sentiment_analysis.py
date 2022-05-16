@@ -14,6 +14,7 @@ from wordcloud import WordCloud
 from nltk.corpus import stopwords
 from tabulate import tabulate
 
+
 def generate_dataframe() -> pd.DataFrame:
     """Generate a dataframe from a csv file for further use"""
     df = pd.read_csv('data/amazon_alexa_reviews.csv', sep=';',
@@ -92,6 +93,7 @@ def token_weights(df: pd.DataFrame):
     data_pos = {'Tokens': highest_weight_token_names_pos, 'Weights': highest_weight_pos}
     tokens_pos = pd.DataFrame(data_pos)
     sorted_tokens = tokens_pos.sort_values(by=['Weights'], ascending=True)
+    print(tabulate(sorted_tokens, headers='keys', tablefmt='psql'))
     sorted_tokens.plot(kind='bar', x='Tokens', y='Weights')
     plt.title("10 most important tokens for positive reviews")
     plt.show()
@@ -125,7 +127,7 @@ def sentiment(df: pd.DataFrame):
 def main():
     df = generate_dataframe()
     show_plots(df)
-    generate_wordclouds(df)
+    # generate_wordclouds(df)
     show_wordclouds()
     token_weights(df)
     sentiment(df)
