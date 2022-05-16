@@ -94,7 +94,11 @@ def token_weights(df: pd.DataFrame):
     tokens_pos = pd.DataFrame(data_pos)
     sorted_tokens = tokens_pos.sort_values(by=['Weights'], ascending=True)
     print(tabulate(sorted_tokens, headers='keys', tablefmt='psql'))
-    sorted_tokens.plot(kind='bar', x='Tokens', y='Weights')
+    plt.bar(sorted_tokens['Tokens'], sorted_tokens['Weights'])
+    plt.xlabel("Tokens")
+    plt.ylabel("Weights")
+    plt.xticks(rotation=15)
+    plt.gcf().subplots_adjust(bottom=0.15)
     plt.title("10 most important tokens for positive reviews")
     plt.show()
 
