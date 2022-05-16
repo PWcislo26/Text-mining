@@ -40,4 +40,4 @@ def text_tokenizer(text: str) -> list:
 def add_labels(x, y):
     """adding labels to bar chart """
     for i in range(1,len(x)+1):
-        plt.text(i,y[i-1],y[i-1], ha="center", va="bottom")
+        plt.text(i,y[i-1], y[i-1], ha="center", va="bottom")
