@@ -9,7 +9,9 @@ from util import text_tokenizer, add_labels, cleanup_text
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import confusion_matrix
+from sklearn import svm
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import confusion_matrix, classification_report
 from wordcloud import WordCloud
 from nltk.corpus import stopwords
 from tabulate import tabulate
@@ -117,6 +119,7 @@ def sentiment(df: pd.DataFrame):
     print(f"Logistic regression model prediction accuracy - {lr_score * 100} %")
     y_pred_lr = lr.predict(x_transform_test)
     tn, fp, fn, tp = confusion_matrix(y_test, y_pred_lr).ravel()
+    print("Logistic Regression classification report")
     print(classification_report(y_test,y_pred_lr))
     """Precision informuje ile przypadków zdiagnozowanych pozytywnie jest rzeczywiscie pozytywna, dla klasy 0 precyzja 
      wynosi 0.89 a dla klasy 1 0.96, idealny wynik to 1. 
@@ -137,11 +140,48 @@ def sentiment(df: pd.DataFrame):
                               ["True negatives ratio", tn / (fn + tn)]])
     print(confusion_table.draw())
 
+    svml = svm.SVC()
+    svml = svml.fit(x_transform_train, y_train)
+    svml_score = svml.score(x_transform_test,y_test)
+    print(f" Support Vector Machine model prediction accuracy - {svml_score * 100} %")
+    y_pred_svml = svml.predict(x_transform_test)
+    print("Classification report for Support Vector Machine")
+    print(classification_report(y_test, y_pred_svml)) #bardzo niski recall dla klasy 0, odrzucenie algorytmu
+    tn, fp, fn, tp = confusion_matrix(y_test, y_pred_svml).ravel()
+    confusion_table_svml = texttable.Texttable()
+    confusion_table_svml.add_rows([["Confusion matrix results", "Number/ratio"],
+                              ["True positives", tp],
+                              ["True negatives", tn],
+                              ["False positives", fp],
+                              ["False negatives", fn],
+                              ["True positives ratio", tp / (tp + fp)],
+                              ["True negatives ratio", tn / (fn + tn)]])
+    print(confusion_table_svml.draw())
+
+
+    rfcl = RandomForestClassifier()
+    rfcl =rfcl.fit(x_transform_train,y_train)
+    rfcl_score = rfcl.score(x_transform_test,y_test)
+    print(f"Random forest classifier prediction accuracy = {rfcl_score * 100} %")
+    y_pred_rfcl= rfcl.predict(x_transform_test)
+    print("Classification report for Random Forest Classifier")
+    print(classification_report(y_test, y_pred_rfcl)) # recall < 0.5 dla klasy 0, odrzucenie algorytmu
+    tn, fp, fn, tp = confusion_matrix(y_test, y_pred_rfcl).ravel()
+    confusion_table_rfcl = texttable.Texttable()
+    confusion_table_rfcl.add_rows([["Confusion matrix results", "Number/ratio"],
+                                   ["True positives", tp],
+                                   ["True negatives", tn],
+                                   ["False positives", fp],
+                                   ["False negatives", fn],
+                                   ["True positives ratio", tp / (tp + fp)],
+                                   ["True negatives ratio", tn / (fn + tn)]])
+    print(confusion_table_rfcl.draw())
+
 
 def main():
     df = generate_dataframe()
     show_plots(df)
-    # generate_wordclouds(df)
+    generate_wordclouds(df)
     show_wordclouds()
     token_weights(df)
     sentiment(df)
