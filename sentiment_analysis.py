@@ -12,7 +12,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn import svm
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import confusion_matrix, classification_report
-from wordcloud import WordCloud
+# from wordcloud import WordCloud
 from nltk.corpus import stopwords
 from tabulate import tabulate
 
@@ -123,13 +123,17 @@ def sentiment(df: pd.DataFrame):
     print(classification_report(y_test,y_pred_lr))
     """Precision informuje ile przypadków zdiagnozowanych pozytywnie jest rzeczywiscie pozytywna, dla klasy 0 precyzja 
      wynosi 0.89 a dla klasy 1 0.96, idealny wynik to 1. 
-     Recall informuje o udziale przypadkow zdiagnozowanych pozytywnie wśród wszystkich przypdkow pozytywnych, 
+     Recall informuje o udziale przypadkow zdiagnozowanych pozytywnie wśród wszystkich przypadkow pozytywnych, 
      rowniez tych zaliczonych do negatywnych (FN). Dla klasy 0 recall wynosi 0.52
-     a dla klasy 1 - 0.99. Niski wynik klasy 0 najprawdopodobniej wynika z niskiego udzialu ocen negatywnych w zbiorze 
-     badanych danych, przez to algorytm nie zdołał odpowiednio nauczyć się wychwytawać tego typu przypadków.
+     a dla klasy 1 - 0.99. Niski wynik klasy 0 najprawdopodobniej wynika z bardzo małego udzialu ocen negatywnych w 
+     zbiorze badanych danych, przez co algorytm nie zdołał odpowiednio nauczyć się wychwytawać tego typu przypadków.
      F1-score to srednia harmoniczna pomiędzy precision a recall, im blizej jest wartosci 1 tym lepszy algorytm 
      klasyfikujący dla danego przypadku, dla klasy 0, f1 score wynosi 0.66 a niski wynik najprawdopobniej związany jest
-    z wyżej wymienionym powodem. Dla klasy 1 f1-score wynosi 0.98 co jest bardzo dobrym wynikiem."""
+    z wyżej wymienionym powodem. Dla klasy 1 f1-score wynosi 0.98 co jest bardzo dobrym wynikiem.
+    Dodatkowo z analizy wag tokenow w recenzjach negatywnych  i pozytywnych wynikało, że słowa nacechowane negatywnie 
+    niekoniecznie są dominujące w recenzjach negatywnych, co dodatkowo utrudnia rozróżnienie ich od recenzji pozytwnych,
+     z którym dzielone jest wiele słów neutralnych. 
+    """
     confusion_table = texttable.Texttable()
     confusion_table.add_rows([["Confusion matrix results", "Number/ratio"],
                               ["True positives", tp],
@@ -143,7 +147,7 @@ def sentiment(df: pd.DataFrame):
     svml = svm.SVC()
     svml = svml.fit(x_transform_train, y_train)
     svml_score = svml.score(x_transform_test,y_test)
-    print(f" Support Vector Machine model prediction accuracy - {svml_score * 100} %")
+    print(f"Support Vector Machine model prediction accuracy - {svml_score * 100} %")
     y_pred_svml = svml.predict(x_transform_test)
     print("Classification report for Support Vector Machine")
     print(classification_report(y_test, y_pred_svml)) #bardzo niski recall dla klasy 0, odrzucenie algorytmu
@@ -159,7 +163,7 @@ def sentiment(df: pd.DataFrame):
     print(confusion_table_svml.draw())
 
 
-    rfcl = RandomForestClassifier()
+    rfcl = RandomForestClassifier(n_estimators=150)
     rfcl =rfcl.fit(x_transform_train,y_train)
     rfcl_score = rfcl.score(x_transform_test,y_test)
     print(f"Random forest classifier prediction accuracy = {rfcl_score * 100} %")
@@ -180,10 +184,10 @@ def sentiment(df: pd.DataFrame):
 
 def main():
     df = generate_dataframe()
-    show_plots(df)
-    generate_wordclouds(df)
-    show_wordclouds()
-    token_weights(df)
+    # show_plots(df)
+    # generate_wordclouds(df)
+    # show_wordclouds()
+    # token_weights(df)
     sentiment(df)
 
 
