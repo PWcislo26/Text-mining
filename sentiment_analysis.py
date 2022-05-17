@@ -117,6 +117,16 @@ def sentiment(df: pd.DataFrame):
     print(f"Logistic regression model prediction accuracy - {lr_score * 100} %")
     y_pred_lr = lr.predict(x_transform_test)
     tn, fp, fn, tp = confusion_matrix(y_test, y_pred_lr).ravel()
+    print(classification_report(y_test,y_pred_lr))
+    """Precision informuje ile przypadków zdiagnozowanych pozytywnie jest rzeczywiscie pozytywna, dla klasy 0 precyzja 
+     wynosi 0.89 a dla klasy 1 0.96, idealny wynik to 1. 
+     Recall informuje o udziale przypadkow zdiagnozowanych pozytywnie wśród wszystkich przypdkow pozytywnych, 
+     rowniez tych zaliczonych do negatywnych (FN). Dla klasy 0 recall wynosi 0.52
+     a dla klasy 1 - 0.99. Niski wynik klasy 0 najprawdopodobniej wynika z niskiego udzialu ocen negatywnych w zbiorze 
+     badanych danych, przez to algorytm nie zdołał odpowiednio nauczyć się wychwytawać tego typu przypadków.
+     F1-score to srednia harmoniczna pomiędzy precision a recall, im blizej jest wartosci 1 tym lepszy algorytm 
+     klasyfikujący dla danego przypadku, dla klasy 0, f1 score wynosi 0.66 a niski wynik najprawdopobniej związany jest
+    z wyżej wymienionym powodem. Dla klasy 1 f1-score wynosi 0.98 co jest bardzo dobrym wynikiem."""
     confusion_table = texttable.Texttable()
     confusion_table.add_rows([["Confusion matrix results", "Number/ratio"],
                               ["True positives", tp],
