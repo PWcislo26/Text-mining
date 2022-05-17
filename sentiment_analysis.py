@@ -12,7 +12,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn import svm
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import confusion_matrix, classification_report
-# from wordcloud import WordCloud
+from wordcloud import WordCloud
 from nltk.corpus import stopwords
 from tabulate import tabulate
 
@@ -184,10 +184,10 @@ def sentiment(df: pd.DataFrame):
 
 def main():
     df = generate_dataframe()
-    # show_plots(df)
-    # generate_wordclouds(df)
-    # show_wordclouds()
-    # token_weights(df)
+    show_plots(df)
+    generate_wordclouds(df)
+    show_wordclouds()
+    token_weights(df)
     sentiment(df)
 
 
