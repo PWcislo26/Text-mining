@@ -109,7 +109,7 @@ def sentiment(df: pd.DataFrame):
     """Sentiment analysis for the amazon alexa review data with Logistic Regression, RandomForestClassifier and Support Vector Machine"""
     x = df['verified_reviews']
     y = df['sentiment']
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=42)
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=42, stratify = y)
     vectorizer = CountVectorizer(tokenizer=text_tokenizer)
     x_transform_train = vectorizer.fit_transform(x_train)
     x_transform_test = vectorizer.transform(x_test)
