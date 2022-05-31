@@ -106,7 +106,7 @@ def token_weights(df: pd.DataFrame):
 
 
 def sentiment(df: pd.DataFrame):
-    """Sentiment analysis for the amazon alexa review data with logistic regression prediction machine learning"""
+    """Sentiment analysis for the amazon alexa review data with Logistic Regression, RandomForestClassifier and Support Vector Machine"""
     x = df['verified_reviews']
     y = df['sentiment']
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
