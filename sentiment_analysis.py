@@ -3,9 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import texttable
 
-
 from util import text_tokenizer, generate_dataframe, generate_wordclouds, show_wordclouds, show_plots
-
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
@@ -124,7 +122,7 @@ def sentiment(df: pd.DataFrame):
 def main():
     df = generate_dataframe()
     show_plots(df)
-    generate_wordclouds(df)
+    # generate_wordclouds(df)
     show_wordclouds()
     token_weights(df)
     sentiment(df)
