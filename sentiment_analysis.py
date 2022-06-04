@@ -122,7 +122,7 @@ def sentiment(df: pd.DataFrame):
 def main():
     df = generate_dataframe()
     show_plots(df)
-    # generate_wordclouds(df)
+    generate_wordclouds(df)
     show_wordclouds()
     token_weights(df)
     sentiment(df)
