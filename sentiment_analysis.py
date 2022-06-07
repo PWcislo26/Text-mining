@@ -88,9 +88,6 @@ def sentiment(df: pd.DataFrame):
     y_pred_dt = dt.predict(x_transform_test)
     print("Decision Tree classification report")
     print(classification_report(y_test, y_pred_dt))
-    # y_pred_lr = lr.predict(x_transform_test)
-    # print("Logistic Regression classification report")
-    # print(classification_report(y_test, y_pred_lr))
 
     svml = svm.SVC()
     svml = svml.fit(x_transform_train, y_train)
