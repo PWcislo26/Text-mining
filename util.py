@@ -59,7 +59,7 @@ def show_plots(df: pd.DataFrame):
     ratings = df['airline_sentiment'].value_counts().sort_index()  # count distribution of review ratings
     plt.bar(ratings.index, ratings.values)
     plt.title(f"Distribution of review ratings")
-    plt.xlabel("Review rating score")
+    plt.xlabel("Review rating sentiment")
     plt.ylabel("Number of reviews")
     plt.show()
 
